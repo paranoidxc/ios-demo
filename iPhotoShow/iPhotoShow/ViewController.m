@@ -11,7 +11,7 @@
 
 @interface ViewController ()
 
-#define PHOTONUMBERS 8  //照片数量
+#define PHOTONUMBERS 3 //照片数量
 @end
 
 @implementation ViewController
@@ -61,30 +61,44 @@ const CGFloat kScrollObjWidth	= 320;
         imageview.frame = CGRectMake(20, 0, kScrollObjWidth-40, kScrollObjHeight);
         */
         
-        UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, kScrollObjWidth, kScrollObjHeight)];
+        //UIImageView *imageview = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, kScrollObjWidth, kScrollObjHeight)];
+
         NSString *imageName = [NSString stringWithFormat:@"image%d.jpg", i];
-        imageview.image = [UIImage imageNamed:imageName];
-        
-        
-        imageview.contentMode = UIViewContentModeScaleAspectFit;
-        //imageview.contentMode = UIViewContentModeScaleAspectFill;
+        UIImageView *imageview =  [[UIImageView alloc] initWithImage:[UIImage imageNamed:imageName]];
+
         imageview.clipsToBounds = YES;
         imageview.userInteractionEnabled = YES;
         imageview.tag = i;
         [imageview addGestureRecognizer:doubleTap];
-        
+        s.contentSize = imageview.frame.size;
         [s addSubview:imageview];
+        
+        //imageview.autoresizingMask = YES;
+        s.minimumZoomScale = s.frame.size.width / imageview.frame.size.width;
+        s.maximumZoomScale = 2.0;
+        [s setZoomScale:s.minimumZoomScale];
+        //s.autoresizingMask = YES;
         [self.imageScrollView addSubview:s];
     }
     
     helpPageCon.numberOfPages = PHOTONUMBERS;
     helpPageCon.hidesForSinglePage = YES;
-    helpPageCon.layer.zPosition = 1;
+    helpPageCon.layer.zPosition = 100;
+    imageScrollView.layer.zPosition = 8;
     
     imageScrollView.autoresizesSubviews = YES;
     imageScrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     
     [self.view addSubview:self.imageScrollView];
+    //self.view = self.imageScrollView;
+}
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)x
+{
+    // Return YES if incoming orientation is Portrait
+    // or either of the Landscapes, otherwise, return NO
+    return (x == UIInterfaceOrientationPortrait)
+    || UIInterfaceOrientationIsLandscape(x);
 }
 
 #pragma mark -
@@ -120,25 +134,22 @@ const CGFloat kScrollObjWidth	= 320;
 }
 
 -(void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView{
-    
     if (scrollView == self.imageScrollView){
         CGFloat x = scrollView.contentOffset.x;
         if (x==offset){
-            
         }
         else {
             offset = x;
             for (UIScrollView *s in scrollView.subviews){
                 if ([s isKindOfClass:[UIScrollView class]]){
-                    [s setZoomScale:1.0];
-                    
-                    //UIImageView *image = [[s subviews] objectAtIndex:0];
-                    //image.frame = CGRectMake(20, 0, kScrollObjWidth, kScrollObjHeight);
-                    
+                    UIImageView *image = [[s subviews] objectAtIndex:0];
+                    float minimumZoomScale = s.frame.size.width / image.bounds.size.width;
+                    [s setZoomScale:minimumZoomScale];
                 }
             }
         }
     }
+
 }
 - (void)rlayoutScrollImages
 {
@@ -183,6 +194,34 @@ const CGFloat kScrollObjWidth	= 320;
     
 }
 
+- (void)scrollViewDidZoom:(UIScrollView *)scrollView {
+    UIImageView *image = [[scrollView subviews] objectAtIndex:0];
+    image.frame = [self centeredFrameForScrollView:scrollView andUIView:image];;
+}
+
+- (CGRect)centeredFrameForScrollView:(UIScrollView *)scroll andUIView:(UIView *)rView {
+	CGSize boundsSize = scroll.bounds.size;
+    CGRect frameToCenter = rView.frame;
+    
+    // center horizontally
+    if (frameToCenter.size.width < boundsSize.width) {
+        frameToCenter.origin.x = (boundsSize.width - frameToCenter.size.width) / 2;
+    }
+    else {
+        frameToCenter.origin.x = 0;
+    }
+    
+    // center vertically
+    if (frameToCenter.size.height < boundsSize.height) {
+        frameToCenter.origin.y = (boundsSize.height - frameToCenter.size.height) / 2;
+    }
+    else {
+        frameToCenter.origin.y = 0;
+    }
+	
+	return frameToCenter;
+}
+
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     UIDeviceOrientation currentOrientation  = [[UIDevice currentDevice] orientation];
     NSLog(@"did rotate from %d", currentOrientation);
@@ -204,6 +243,13 @@ const CGFloat kScrollObjWidth	= 320;
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+
+- (IBAction)imagepagechange:(id)sender {
+    int page = helpPageCon.currentPage; //获取当前pagecontroll的值
+    //根据pagecontroll的值来改变scrollview的滚动位置，以此切换到指定的页面
+    [self.imageScrollView setContentOffset:CGPointMake(kScrollObjWidth * page, 0) animated:YES];
 }
 
 @end

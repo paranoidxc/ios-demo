@@ -12,7 +12,11 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="law-N8-eeM"/>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="law-N8-eeM">
+                                <connections>
+                                    <action selector="imagepagechange:" destination="2" eventType="valueChanged" id="R7u-Kg-d9U"/>
+                                </connections>
+                            </pageControl>
                         </subviews>
                         <color key="backgroundColor" red="0.99810666449999996" green="0.8672216828" blue="0.88146810490000005" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>

@@ -14,5 +14,5 @@
 
 @property (strong, nonatomic) IBOutlet UIPageControl *helpPageCon;
 @property (nonatomic, retain) UIScrollView *imageScrollView;
-
+- (IBAction)imagepagechange:(id)sender;
 @end

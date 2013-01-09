@@ -26,7 +26,7 @@
 	scroll.minimumZoomScale = scroll.frame.size.width / image.frame.size.width;
 	scroll.maximumZoomScale = 2.0;
 	[scroll setZoomScale:scroll.minimumZoomScale];
-
+    scroll.autoresizingMask = YES;
 	self.view = scroll;
 	[scroll release];
 
@@ -36,6 +36,13 @@
 	[image release], image = nil;
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)x
+{
+    // Return YES if incoming orientation is Portrait
+    // or either of the Landscapes, otherwise, return NO
+    return (x == UIInterfaceOrientationPortrait)
+    || UIInterfaceOrientationIsLandscape(x);
+}
 
 - (CGRect)centeredFrameForScrollView:(UIScrollView *)scroll andUIView:(UIView *)rView {
 	CGSize boundsSize = scroll.bounds.size;
