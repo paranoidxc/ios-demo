@@ -1,21 +1,29 @@
 //
 //  AppDelegate.m
-//  iPhotoShow
+//  CITest
 //
-//  Created by 川 on 12/19/12.
-//  Copyright (c) 2012 com.huangxc. All rights reserved.
+//  Created by 川 on 4/16/13.
+//  Copyright (c) 2013 com.huangxc. All rights reserved.
 //
 
 #import "AppDelegate.h"
+
 #import "ViewController.h"
+
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
+    self.viewController = [[ViewController alloc] initWithNibName:@"ViewController" bundle:nil];
+    self.window.rootViewController = self.viewController;
+    [self.window makeKeyAndVisible];
+    
+    [[UIApplication sharedApplication] setStatusBarHidden:YES];
     return YES;
 }
-							
+
 - (void)applicationWillResignActive:(UIApplication *)application
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -35,14 +43,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
-   
-    ViewController* controller = [ViewController alloc];
-    
-    [controller doMyLayoutStuff];
-    
-  //  [controller release]
-    
-    NSLog(@"applicationDidBecomeActive");
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
 }
 

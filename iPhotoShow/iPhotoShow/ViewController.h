@@ -8,11 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <UIScrollViewDelegate> {
+@interface ViewController : UIViewController <UIScrollViewDelegate,UIApplicationDelegate> {
     CGFloat offset;
+    int ipage;
 }
-
+@property (strong, nonatomic)NSArray *image_list;
 @property (strong, nonatomic) IBOutlet UIPageControl *helpPageCon;
 @property (nonatomic, retain) UIScrollView *imageScrollView;
 - (IBAction)imagepagechange:(id)sender;
+- (void)doMyLayoutStuff;
 @end
